@@ -46,3 +46,28 @@ export function calculateWait(workAheadMinutes: number, workingBarbers: number):
   if (workAheadMinutes <= 0) return 0;
   return roundWaitUp(workAheadMinutes / workingBarbers);
 }
+
+export function normalizePhone(phone: string): string {
+  return phone.replace(/[ -]/g, '');
+}
+
+export function validateJoinName(name: string): boolean {
+  const trimmed = name.trim();
+  return trimmed.length >= 2 && trimmed.length <= 40;
+}
+
+export function validateJoinPhone(phone: string): boolean {
+  return /^\d{10}$/.test(normalizePhone(phone));
+}
+
+export function validateServiceSelection(
+  selectedIds: string[],
+  enabledServiceIds: string[],
+): boolean {
+  return (
+    selectedIds.length >= 1 &&
+    selectedIds.length <= RULE_CONSTANTS.MAX_SERVICES &&
+    new Set(selectedIds).size === selectedIds.length &&
+    selectedIds.every((id) => enabledServiceIds.includes(id))
+  );
+}

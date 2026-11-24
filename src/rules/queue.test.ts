@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { calculateWait, isAllowedMove, roundWaitUp } from './queue';
+import {
+  calculateWait,
+  isAllowedMove,
+  normalizePhone,
+  roundWaitUp,
+  validateJoinName,
+  validateJoinPhone,
+  validateServiceSelection,
+} from './queue';
 
 describe('wait estimates', () => {
   it('passes examples E1-E9', () => {
@@ -29,5 +37,29 @@ describe('status move table', () => {
     expect(isAllowedMove('In chair', 'Cancelled')).toBe(false);
     expect(isAllowedMove('Waiting', 'No-show')).toBe(false);
     expect(isAllowedMove('Done', 'Waiting')).toBe(false);
+  });
+});
+
+describe('join validation', () => {
+  it('trims names and validates the documented length', () => {
+    expect(validateJoinName('  Kunal  ')).toBe(true);
+    expect(validateJoinName(' A ')).toBe(false);
+    expect(validateJoinName('x'.repeat(41))).toBe(false);
+  });
+
+  it('normalizes phone spaces and dashes', () => {
+    expect(normalizePhone('98765 43210')).toBe('9876543210');
+    expect(normalizePhone('98765-43210')).toBe('9876543210');
+    expect(validateJoinPhone('98765 43210')).toBe(true);
+    expect(validateJoinPhone('987654321')).toBe(false);
+    expect(validateJoinPhone('987654321a')).toBe(false);
+  });
+
+  it('allows one to three unique enabled services', () => {
+    expect(validateServiceSelection(['haircut', 'beard'], ['haircut', 'beard', 'spa'])).toBe(true);
+    expect(validateServiceSelection([], ['haircut'])).toBe(false);
+    expect(validateServiceSelection(['haircut', 'haircut'], ['haircut'])).toBe(false);
+    expect(validateServiceSelection(['haircut', 'beard', 'spa', 'massage'], ['haircut', 'beard', 'spa', 'massage'])).toBe(false);
+    expect(validateServiceSelection(['haircut'], ['beard'])).toBe(false);
   });
 });

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 import { getSavedLanguage, saveLanguage, translate, type Language } from './i18n';
 import { HomeScreen } from './screens/Home';
+import { JoinScreen } from './screens/Join';
 
 type AppPageProps = {
   language: Language;
@@ -86,7 +87,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomeScreen language={language} />} />
-        <Route path="/join" element={<EmptyPage language={language} title={translate(language, 'join.title')} />} />
+        <Route path="/join" element={<JoinScreen language={language} />} />
         <Route path="/status/:id" element={<EmptyPage language={language} title="My Status" />} />
         <Route path="/reception" element={<EmptyPage language={language} title="Reception" />} />
         <Route path="/barber/:name" element={<BarberPage language={language} />} />
