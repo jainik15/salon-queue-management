@@ -1132,6 +1132,539 @@ input {
   }
 }
 
+.brand-name {
+  margin-left: 8px;
+  color: var(--ivory);
+  font-family: 'Cardo', 'Noto Serif Gujarati', serif;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.brand-name strong {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.home-screen .top-bar {
+  grid-template-columns: 1fr auto;
+  min-height: 84px;
+  background: rgba(17, 24, 39, 0.72);
+  border-bottom: 1px solid rgba(232, 199, 102, 0.16);
+}
+
+.home-screen .top-bar .brand {
+  height: 44px;
+}
+
+.home-screen .top-bar .brand-mark {
+  width: 28px;
+  height: 28px;
+}
+
+.home-screen .top-bar .screen-title {
+  display: none;
+}
+
+.home-content {
+  width: 100%;
+  max-width: 1120px;
+  min-height: calc(100dvh - 84px);
+  padding: 24px 16px max(24px, env(safe-area-inset-bottom));
+}
+
+.home-main-board {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.open-status {
+  height: 44px;
+  padding-left: 4px;
+  color: var(--gold-soft);
+  font-size: 15px;
+  letter-spacing: 0;
+}
+
+.live-card {
+  position: relative;
+  width: 100%;
+  min-height: 260px;
+  align-items: flex-start;
+  justify-content: center;
+  border: 1px solid rgba(232, 199, 102, 0.18);
+  border-radius: 6px;
+  background:
+    linear-gradient(rgba(246, 241, 231, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(246, 241, 231, 0.018) 1px, transparent 1px),
+    var(--ink);
+  background-size: 28px 28px;
+  box-shadow: inset 0 1px rgba(246, 241, 231, 0.06), 0 18px 48px rgba(17, 24, 39, 0.24);
+  padding: 32px 24px;
+  text-align: left;
+}
+
+.live-ticket-label {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.live-card h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 18px 0 4px;
+  line-height: 0.92;
+}
+
+.live-card h2 strong {
+  color: var(--gold);
+  font-family: 'Barlow Condensed', 'Noto Sans Gujarati', sans-serif;
+  font-size: clamp(96px, 24vw, 160px);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.live-card h2 span {
+  max-width: 180px;
+  color: var(--ivory);
+  font-family: 'Cardo', 'Noto Serif Gujarati', serif;
+  font-size: clamp(22px, 6vw, 34px);
+  line-height: 1.1;
+}
+
+.live-card p {
+  margin: 8px 0 12px 4px;
+  color: var(--gold-soft);
+  font-family: 'Barlow Condensed', 'Noto Sans Gujarati', sans-serif;
+  font-size: 28px;
+  font-variant-numeric: tabular-nums;
+}
+
+.live-indicator {
+  margin-left: 4px;
+}
+
+.barber-chips {
+  gap: 8px;
+}
+
+.barber-chip {
+  border: 0;
+  border-left: 3px solid var(--surface-raised);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: none;
+}
+
+.home-action-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.active-spot-card {
+  min-height: 116px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  border: 1px dashed var(--gold-deep);
+  border-radius: 6px;
+  background: rgba(17, 24, 39, 0.72);
+  padding: 16px;
+}
+
+.active-spot-card p {
+  grid-column: 1;
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.active-spot-label {
+  grid-column: 1;
+  color: var(--gold-soft);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.active-spot-token {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  color: var(--gold);
+  font-family: 'Barlow Condensed', 'Noto Sans Gujarati', sans-serif;
+  font-size: 56px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.active-spot-card .text-button {
+  grid-column: 1 / 3;
+  width: 100%;
+  margin-top: 12px;
+  justify-content: center;
+  color: var(--charcoal);
+}
+
+.home-empty-ticket {
+  min-height: 116px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--surface-raised);
+  border-radius: 6px;
+  color: var(--gold-soft);
+}
+
+.home-empty-ticket .empty-chair {
+  width: 84px;
+  height: 74px;
+  opacity: 0.72;
+}
+
+.join-button {
+  position: relative;
+  min-height: 56px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(212, 160, 23, 0.14);
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  .home-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    align-content: start;
+    gap: 24px;
+    padding: 32px 24px;
+  }
+
+  .home-action-panel {
+    position: sticky;
+    top: 116px;
+  }
+
+  .live-card {
+    min-height: 360px;
+  }
+
+  .live-card h2 strong {
+    font-size: 160px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .home-screen .top-bar {
+    padding-inline: 32px;
+  }
+
+  .home-content {
+    max-width: 1120px;
+    grid-template-columns: minmax(0, 7fr) minmax(300px, 5fr);
+    gap: 48px;
+    padding: 48px 32px;
+  }
+
+  .live-card {
+    min-height: 520px;
+  }
+
+  .live-card h2 strong {
+    font-size: 240px;
+  }
+
+  .home-action-panel {
+    justify-content: space-between;
+  }
+
+  .active-spot-card,
+  .home-empty-ticket {
+    min-height: 220px;
+  }
+}
+
+.join-screen .top-bar,
+.status-screen .top-bar {
+  min-height: 84px;
+  background: rgba(17, 24, 39, 0.72);
+  border-bottom-color: rgba(232, 199, 102, 0.16);
+}
+
+.join-screen .join-back {
+  color: var(--gold-soft);
+  font-family: 'DM Sans', 'Noto Sans Gujarati', sans-serif;
+}
+
+.join-screen .screen-title,
+.status-screen .screen-title {
+  color: var(--ivory);
+  font-family: 'Cardo', 'Noto Serif Gujarati', serif;
+}
+
+.join-content {
+  position: relative;
+  max-width: 1120px;
+  width: 100%;
+  padding: 24px 16px;
+}
+
+.join-content::before {
+  content: '';
+  position: absolute;
+  left: 16px;
+  top: 18px;
+  width: 48px;
+  height: 3px;
+  background: var(--gold);
+}
+
+.join-content h2 {
+  margin-top: 18px;
+  color: var(--ivory);
+  font-family: 'Cardo', 'Noto Serif Gujarati', serif;
+  font-size: 20px;
+}
+
+.join-field {
+  color: var(--gold-soft);
+}
+
+.join-field input,
+.service-card,
+.barber-option {
+  border-radius: 6px;
+  background: var(--ink);
+  box-shadow: inset 0 1px rgba(246, 241, 231, 0.04);
+}
+
+.join-field input {
+  border-color: var(--surface-raised);
+  color: var(--ivory);
+  font-size: 16px;
+}
+
+.service-card.selected {
+  border-color: var(--gold);
+  background: rgba(212, 160, 23, 0.08);
+}
+
+.service-card-name,
+.barber-option-main strong {
+  font-family: 'DM Sans', 'Noto Sans Gujarati', sans-serif;
+}
+
+.service-check {
+  border-radius: 50%;
+}
+
+.join-summary {
+  min-height: 184px;
+  border-top: 1px solid rgba(232, 199, 102, 0.18);
+  background: rgba(17, 24, 39, 0.96);
+  box-shadow: 0 -16px 40px rgba(17, 24, 39, 0.34);
+  backdrop-filter: none;
+}
+
+.summary-line {
+  color: var(--ivory);
+  font-family: 'Barlow Condensed', 'Noto Sans Gujarati', sans-serif;
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+}
+
+.summary-estimate {
+  color: var(--gold-soft);
+}
+
+.status-screen {
+  background: var(--charcoal);
+}
+
+.status-content {
+  max-width: 1120px;
+  width: 100%;
+  padding: 24px 16px 32px;
+}
+
+.status-stepper {
+  max-width: 520px;
+  margin: 0 auto;
+  font-family: 'DM Sans', 'Noto Sans Gujarati', sans-serif;
+}
+
+.status-token,
+.status-position {
+  font-family: 'Barlow Condensed', 'Noto Sans Gujarati', sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.status-token {
+  color: var(--gold);
+  font-size: clamp(72px, 18vw, 120px);
+  text-shadow: none;
+}
+
+.status-position {
+  color: var(--ivory);
+  font-size: 32px;
+}
+
+.stage-banner {
+  max-width: 520px;
+  border: 1px solid var(--gold-soft);
+  border-radius: 6px;
+  background: var(--gold);
+  color: var(--charcoal);
+  box-shadow: none;
+  font-family: 'Cardo', 'Noto Serif Gujarati', serif;
+}
+
+.status-details {
+  border: 1px solid var(--surface-raised);
+  border-radius: 6px;
+  background: var(--ink);
+  box-shadow: inset 0 1px rgba(246, 241, 231, 0.04);
+}
+
+.cancel-spot-button {
+  border-radius: 12px;
+  background: transparent;
+  color: var(--ivory);
+}
+
+.confirm-dialog {
+  border: 1px solid rgba(232, 199, 102, 0.24);
+  border-radius: 6px;
+  background: var(--ink);
+  box-shadow: 0 24px 64px rgba(17, 24, 39, 0.48);
+}
+
+.turn-takeover {
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(17, 24, 39, 0.08) 0,
+      rgba(17, 24, 39, 0.08) 8px,
+      transparent 8px,
+      transparent 16px
+    ),
+    var(--gold);
+  background-size: 34px 34px;
+  border: 8px solid var(--charcoal);
+  color: var(--charcoal);
+}
+
+.turn-content h1,
+.turn-barber,
+.turn-token {
+  font-family: 'Barlow Condensed', 'Noto Sans Gujarati', sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 640px) {
+  .join-form {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    align-items: start;
+  }
+
+  .join-content {
+    grid-column: 1;
+  }
+
+  .join-summary {
+    position: sticky;
+    top: 84px;
+    bottom: auto;
+    grid-column: 2;
+    min-height: 240px;
+    margin: 24px 24px 24px 0;
+    border: 1px solid rgba(232, 199, 102, 0.18);
+    border-radius: 6px;
+    box-shadow: 0 16px 40px rgba(17, 24, 39, 0.24);
+  }
+
+  .status-content {
+    display: grid;
+    grid-template-columns: minmax(280px, 7fr) minmax(300px, 5fr);
+    grid-template-areas:
+      'stepper stepper'
+      'ticket ring'
+      'details ring'
+      'actions ring';
+    align-items: center;
+  }
+
+  .status-stepper {
+    grid-area: stepper;
+  }
+
+  .status-token,
+  .status-position,
+  .stage-banner,
+  .barber-break-notice,
+  .status-details,
+  .status-live,
+  .keep-open,
+  .cancel-spot-button {
+    grid-column: 1;
+  }
+
+  .estimate-ring,
+  .estimate-ring-fallback,
+  .no-working-barber {
+    grid-column: 2;
+    grid-row: 2 / 5;
+  }
+}
+
+@media (min-width: 1280px) {
+  .join-form {
+    grid-template-columns: minmax(0, 720px) 360px;
+    justify-content: center;
+  }
+
+  .join-content {
+    padding: 48px 32px;
+  }
+
+  .join-summary {
+    margin-top: 48px;
+  }
+
+  .status-content {
+    grid-template-columns: minmax(360px, 7fr) minmax(420px, 5fr);
+    gap: 32px 48px;
+    padding: 48px 32px;
+  }
+
+  .status-token {
+    font-size: 120px;
+  }
+
+  .estimate-ring {
+    width: 260px;
+    height: 260px;
+  }
+
+  .estimate-ring-inner {
+    width: 220px;
+    height: 220px;
+  }
+}
+
 .brand-lockup {
   min-height: 44px;
   display: inline-flex;

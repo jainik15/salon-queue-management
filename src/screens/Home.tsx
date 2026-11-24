@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { translate, type Language } from '../i18n';
+import { BrandLockup, EmptyChairIllustration } from '../components/DesignSystem';
 
 type HomeScreenProps = {
   language: Language;
@@ -74,8 +75,8 @@ export function HomeScreen({ language }: HomeScreenProps) {
       )}
       <header className="top-bar">
         <Link className="brand" to="/" aria-label="LateCuts home">
-          <span className="logo-mark" aria-hidden="true">◈</span>
-          <span>LateCuts</span>
+          <img className="brand-mark" src="/brand/logo-mark.svg" alt="" />
+          <span className="brand-name"><span>Late</span><strong>Cuts</strong></span>
         </Link>
         <h1 className="screen-title" aria-hidden="true" />
         <button
@@ -106,47 +107,63 @@ export function HomeScreen({ language }: HomeScreenProps) {
         </section>
       ) : (
         <section className="home-content">
-          <div className="open-status">
-            <span className="status-dot success-dot" aria-hidden="true" />
-            {translate(language, 'home.open', { time: '9 PM' })}
-          </div>
-
-          {activeSpot && (
-            <article className="active-spot-card">
-              <p>
-                {translate(language, 'home.activeSpot', {
-                  token: activeSpot.token,
-                  position: translate(language, 'home.positionFourth'),
-                })}
-              </p>
-              <Link className="text-button" to={`/status/${activeSpot.id}`}>
-                {translate(language, 'home.viewStatus')}
-              </Link>
-            </article>
-          )}
-
-          <article className="live-card">
-            <h2>{translate(language, 'home.waiting', { count: 6 })}</h2>
-            <p>{translate(language, 'estimate.about', { time: '50 min' })}</p>
-            <div className={`live-indicator ${connectionLost ? 'reconnecting' : ''}`}>
-              <span className="live-dot" aria-hidden="true" />
-              {translate(language, connectionLost ? 'home.reconnecting' : 'home.live')}
+          <div className="home-main-board">
+            <div className="open-status">
+              <span className="status-dot success-dot" aria-hidden="true" />
+              {translate(language, 'home.open', { time: '9 PM' })}
             </div>
-          </article>
 
-          <div className="barber-chips" aria-label="Barbers">
-            {dummyBarbers.map((barber) => (
-              <span className={`barber-chip barber-${barber.state}`} key={barber.name}>
-                <span className="barber-name">{barber.name}</span>
-                <span className={`barber-dot barber-dot-${barber.state}`} aria-hidden="true" />
-                <span>{barberStateText(barber.state)}</span>
-              </span>
-            ))}
+            <article className="live-card">
+              <div className="live-ticket-label">
+                <span>LateCuts</span>
+                <span>QUEUE BOARD</span>
+              </div>
+              <h2>
+                <strong>{6}</strong>
+                <span>{translate(language, 'home.waiting', { count: '' }).replace(' ', '')}</span>
+              </h2>
+              <p>{translate(language, 'estimate.about', { time: '50 min' })}</p>
+              <div className={`live-indicator ${connectionLost ? 'reconnecting' : ''}`}>
+                <span className="live-dot" aria-hidden="true" />
+                {translate(language, connectionLost ? 'home.reconnecting' : 'home.live')}
+              </div>
+            </article>
+
+            <div className="barber-chips" aria-label="Barbers">
+              {dummyBarbers.map((barber) => (
+                <span className={`barber-chip barber-${barber.state}`} key={barber.name}>
+                  <span className="barber-name">{barber.name}</span>
+                  <span className={`barber-dot barber-dot-${barber.state}`} aria-hidden="true" />
+                  <span>{barberStateText(barber.state)}</span>
+                </span>
+              ))}
+            </div>
           </div>
 
-          <Link className="primary-button join-button" to="/join">
-            {translate(language, 'home.join')}
-          </Link>
+          <aside className="home-action-panel">
+            {activeSpot ? (
+              <article className="active-spot-card">
+                <span className="active-spot-label">Your ticket</span>
+                <strong className="active-spot-token">{activeSpot.token}</strong>
+                <p>
+                  {translate(language, 'home.activeSpot', {
+                    token: activeSpot.token,
+                    position: translate(language, 'home.positionFourth'),
+                  })}
+                </p>
+                <Link className="primary-button text-button" to={`/status/${activeSpot.id}`}>
+                  {translate(language, 'home.viewStatus')}
+                </Link>
+              </article>
+            ) : (
+              <article className="home-empty-ticket">
+                <EmptyChairIllustration />
+              </article>
+            )}
+            <Link className="primary-button join-button" to="/join">
+              {translate(language, 'home.join')}
+            </Link>
+          </aside>
         </section>
       )}
     </main>

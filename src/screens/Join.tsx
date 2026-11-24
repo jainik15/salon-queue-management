@@ -8,6 +8,7 @@ import {
   validateJoinPhone,
   validateServiceSelection,
 } from '../rules/queue';
+import { BrandLockup } from '../components/DesignSystem';
 
 type JoinScreenProps = {
   language: Language;
