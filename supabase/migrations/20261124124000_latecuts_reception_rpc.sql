@@ -30,7 +30,7 @@ begin
 
     if found and v_lock.locked_until is not null and v_lock.locked_until > now() then
       raise exception 'STAFF_LOCKED';
-    end;
+    end if;
   end if;
 
   if v_pin <> v_expected then
@@ -49,7 +49,7 @@ begin
           when public.join_attempts.attempt_count >= 5
             then now() + interval '30 seconds'
           else null
-        end;
+        end if;
     end if;
     raise exception 'STAFF_WRONG_PIN';
   end if;

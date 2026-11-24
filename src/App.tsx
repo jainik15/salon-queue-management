@@ -6,6 +6,7 @@ import { JoinScreen } from './screens/Join';
 import { StatusScreen } from './screens/Status';
 import { lazy, Suspense } from 'react';
 import { ReceptionScreen } from './screens/Reception';
+import { BarberScreen } from './screens/Barber';
 
 const StyleGuide = import.meta.env.DEV
   ? lazy(() => import('./screens/StyleGuide'))
@@ -70,7 +71,7 @@ function NotFound({ language }: { language: Language }) {
 function BarberPage({ language }: { language: Language }) {
   const location = useLocation();
   const name = decodeURIComponent(location.pathname.split('/')[2] ?? '');
-  return <EmptyPage language={language} title={name || 'Barber'} />;
+  return <BarberScreen language={language} barberName={name || 'Ravi'} />;
 }
 
 function StatusPage({ language }: { language: Language }) {
