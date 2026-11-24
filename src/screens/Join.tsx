@@ -39,6 +39,16 @@ type ActiveSpot = {
   id: string;
   token: string;
   phone: string;
+  status: 'Waiting' | 'Called' | 'In chair' | 'Done' | 'Cancelled' | 'No-show';
+  position: number;
+  estimate: number;
+  initialEstimate: number;
+  preference: 'Any' | 'Ravi' | 'Amit' | 'Imran';
+  barber: 'Ravi' | 'Amit' | 'Imran';
+  joinedAt: string;
+  services: string[];
+  totalMinutes: number;
+  totalPrice: number;
 };
 
 export function JoinScreen({ language }: JoinScreenProps) {
@@ -144,7 +154,13 @@ export function JoinScreen({ language }: JoinScreenProps) {
         }
       }
 
-      if (existingSpot && existingSpot.phone === normalizedPhone) {
+      if (
+        existingSpot &&
+        existingSpot.status !== 'Done' &&
+        existingSpot.status !== 'Cancelled' &&
+        existingSpot.status !== 'No-show' &&
+        existingSpot.phone === normalizedPhone
+      ) {
         navigate(`/status/${existingSpot.id}`, {
           state: { existingSpotToken: existingSpot.token },
         });
@@ -155,6 +171,16 @@ export function JoinScreen({ language }: JoinScreenProps) {
         id: crypto.randomUUID(),
         token: 'S-14',
         phone: normalizedPhone,
+        status: 'Waiting',
+        position: 4,
+        estimate: 35,
+        initialEstimate: 45,
+        preference: preference === 'any' ? 'Any' : (preference.charAt(0).toUpperCase() + preference.slice(1)) as 'Ravi' | 'Amit' | 'Imran',
+        barber: 'Amit',
+        joinedAt: new Date().toISOString(),
+        services: chosenServices.map((service) => translate(language, service.nameKey)),
+        totalMinutes,
+        totalPrice,
       };
 
       window.localStorage.setItem('latecuts-last-name', name.trim());

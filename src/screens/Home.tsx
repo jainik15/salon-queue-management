@@ -9,6 +9,7 @@ type HomeScreenProps = {
 type ActiveSpot = {
   id: string;
   token: string;
+  status?: 'Waiting' | 'Called' | 'In chair' | 'Done' | 'Cancelled' | 'No-show';
 };
 
 const dummyBarbers = [
@@ -31,7 +32,12 @@ export function HomeScreen({ language }: HomeScreenProps) {
     const storedSpot = window.localStorage.getItem('latecuts-active-spot');
     if (storedSpot) {
       try {
-        setActiveSpot(JSON.parse(storedSpot) as ActiveSpot);
+        const parsed = JSON.parse(storedSpot) as ActiveSpot;
+        if (parsed.status && ['Done', 'Cancelled', 'No-show'].includes(parsed.status)) {
+          setActiveSpot(null);
+        } else {
+          setActiveSpot(parsed);
+        }
       } catch {
         window.localStorage.removeItem('latecuts-active-spot');
         setActiveSpot(null);

@@ -71,3 +71,17 @@ export function validateServiceSelection(
     selectedIds.every((id) => enabledServiceIds.includes(id))
   );
 }
+
+export function formatWaitEstimate(minutes: number): string {
+  if (minutes <= 0) return 'No wait';
+  if (minutes < 60) return `${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  const remaining = minutes % 60;
+  return remaining === 0 ? `${hours} h` : `${hours} h ${remaining} min`;
+}
+
+export function resolveDemoStatus(current: SpotStatus, requested: SpotStatus | null): SpotStatus {
+  if (requested === null) return current;
+  if (['Done', 'Cancelled', 'No-show'].includes(current)) return current;
+  return isAllowedMove(current, requested) ? requested : current;
+}

@@ -7,6 +7,8 @@ import {
   validateJoinName,
   validateJoinPhone,
   validateServiceSelection,
+  formatWaitEstimate,
+  resolveDemoStatus,
 } from './queue';
 
 describe('wait estimates', () => {
@@ -61,5 +63,26 @@ describe('join validation', () => {
     expect(validateServiceSelection(['haircut', 'haircut'], ['haircut'])).toBe(false);
     expect(validateServiceSelection(['haircut', 'beard', 'spa', 'massage'], ['haircut', 'beard', 'spa', 'massage'])).toBe(false);
     expect(validateServiceSelection(['haircut'], ['beard'])).toBe(false);
+  });
+});
+
+describe('wait display format', () => {
+  it('formats under an hour and hour-plus estimates', () => {
+    expect(formatWaitEstimate(35)).toBe('35 min');
+    expect(formatWaitEstimate(60)).toBe('1 h');
+    expect(formatWaitEstimate(75)).toBe('1 h 15 min');
+    expect(formatWaitEstimate(0)).toBe('No wait');
+  });
+});
+
+describe('demo status controls', () => {
+  it('applies only allowed moves and never changes a final status', () => {
+    expect(resolveDemoStatus('Waiting', 'Called')).toBe('Called');
+    expect(resolveDemoStatus('Called', 'In chair')).toBe('In chair');
+    expect(resolveDemoStatus('In chair', 'Done')).toBe('Done');
+    expect(resolveDemoStatus('Waiting', 'Done')).toBe('Waiting');
+    expect(resolveDemoStatus('Called', 'Waiting')).toBe('Called');
+    expect(resolveDemoStatus('Done', 'Called')).toBe('Done');
+    expect(resolveDemoStatus('Cancelled', 'Waiting')).toBe('Cancelled');
   });
 });

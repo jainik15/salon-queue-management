@@ -3,6 +3,12 @@ import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-do
 import { getSavedLanguage, saveLanguage, translate, type Language } from './i18n';
 import { HomeScreen } from './screens/Home';
 import { JoinScreen } from './screens/Join';
+import { StatusScreen } from './screens/Status';
+import { lazy, Suspense } from 'react';
+
+const StyleGuide = import.meta.env.DEV
+  ? lazy(() => import('./screens/StyleGuide'))
+  : null;
 
 type AppPageProps = {
   language: Language;
@@ -67,52 +73,7 @@ function BarberPage({ language }: { language: Language }) {
 }
 
 function StatusPage({ language }: { language: Language }) {
-  const location = useLocation();
-  const state = location.state as { existingSpotToken?: string; newSpotToken?: string } | null;
-  const token = state?.existingSpotToken ?? state?.newSpotToken;
-  const spotId = decodeURIComponent(location.pathname.split('/')[2] ?? '');
-  const storedSpotJson = window.localStorage.getItem('latecuts-active-spot');
-  let storedSpotId = '';
-
-  if (storedSpotJson) {
-    try {
-      storedSpotId = (JSON.parse(storedSpotJson) as { id?: string }).id ?? '';
-    } catch {
-      storedSpotId = '';
-    }
-  }
-
-  if ((!storedSpotId || spotId !== storedSpotId) && !state) {
-    return (
-      <main className="app-shell">
-        <TopBar language={language} title={translate(language, 'status.title')} />
-        <section className="empty-page">
-          <h2>{translate(language, 'status.notFound')}</h2>
-          <Link className="primary-button" to="/">
-            {translate(language, 'common.home')}
-          </Link>
-        </section>
-      </main>
-    );
-  }
-
-  return (
-    <main className="app-shell">
-      <TopBar language={language} title={translate(language, 'status.title')} />
-      <section className="empty-page">
-        {token && state?.existingSpotToken ? (
-          <h2>{translate(language, 'join.existing', { token })}</h2>
-        ) : token ? (
-          <h2>{token}</h2>
-        ) : (
-          <h2>{translate(language, 'status.waiting')}</h2>
-        )}
-        <Link className="primary-button" to="/">
-          {translate(language, 'common.home')}
-        </Link>
-      </section>
-    </main>
-  );
+  return <StatusScreen language={language} />;
 }
 
 export default function App() {
@@ -142,6 +103,16 @@ export default function App() {
         <Route path="/barber/:name" element={<BarberPage language={language} />} />
         <Route path="/display" element={<EmptyPage language={language} title="LateCuts" />} />
         <Route path="/admin" element={<EmptyPage language={language} title="Owner Settings" />} />
+        {StyleGuide && (
+          <Route
+            path="/_styleguide"
+            element={
+              <Suspense fallback={<EmptyPage language={language} title="Style guide" />}>
+                <StyleGuide language={language} />
+              </Suspense>
+            }
+          />
+        )}
         <Route path="*" element={<NotFound language={language} />} />
       </Routes>
     </BrowserRouter>

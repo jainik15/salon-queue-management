@@ -1,9 +1,13 @@
 export const themeTokens = {
+  ink: '#111827',
   charcoal: '#1F2937',
   surface: '#374151',
   surfaceRaised: '#4B5563',
   gold: '#D4A017',
   goldPressed: '#B8890F',
+  goldSoft: '#E8C766',
+  goldDeep: '#8A6508',
+  ivory: '#F6F1E7',
   text: '#F9FAFB',
   muted: '#9CA3AF',
   success: '#22C55E',
