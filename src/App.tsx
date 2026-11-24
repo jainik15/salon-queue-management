@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 import { getSavedLanguage, saveLanguage, translate, type Language } from './i18n';
+import { HomeScreen } from './screens/Home';
 
 type AppPageProps = {
   language: Language;
@@ -84,7 +85,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<EmptyPage language={language} title="LateCuts" />} />
+        <Route path="/" element={<HomeScreen language={language} />} />
         <Route path="/join" element={<EmptyPage language={language} title={translate(language, 'join.title')} />} />
         <Route path="/status/:id" element={<EmptyPage language={language} title="My Status" />} />
         <Route path="/reception" element={<EmptyPage language={language} title="Reception" />} />
