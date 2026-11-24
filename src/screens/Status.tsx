@@ -45,10 +45,12 @@ export function StatusScreen({ language }: StatusScreenProps) {
       if (!resolvedSpot) {
         const staleFallback = getStaleStatusFallback(spotId, storedSpot);
         if (staleFallback) {
-          navigate(staleFallback, {
-            replace: true,
-            state: { spot: storedSpot },
-          });
+          window.history.replaceState(
+            { spot: storedSpot },
+            '',
+            staleFallback,
+          );
+          window.dispatchEvent(new PopStateEvent('popstate'));
           return;
         }
         setSpot(null);
