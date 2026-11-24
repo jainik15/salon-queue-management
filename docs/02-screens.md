@@ -132,8 +132,9 @@ These names are fixed. The same word is used in every screen, message and the la
 |---|---|---|
 | Language choice | The device's browser storage | Keep the chosen language |
 | The customer's active spot id | The device's browser storage | Home shows "You are in the queue as S-14"; the link survives a closed tab |
+| Customer capability | The device's secure private browser storage | Authorizes private Status/cancel operations; it is never put in the URL |
 | Last used name and phone | The device's browser storage only, never sent elsewhere | Prefill the Join form next time |
-| Staff PIN unlock | The browser tab session | Staff aren't asked again until the tab closes |
+| Staff session | The browser tab session | Staff are not asked again until expiry, revocation or tab-close |
 
 ---
 

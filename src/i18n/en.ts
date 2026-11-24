@@ -119,4 +119,8 @@ export default {
   'status.progressCalled': 'Called',
   'status.progressInChair': 'In chair',
   'status.progressDone': 'Done',
+  'reception.title': 'Reception',
+  'reception.queueTitle': 'Today’s queue',
+  'reception.waiting': 'Waiting',
+  'staff.access': 'Staff access',
 } as const;

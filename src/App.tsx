@@ -5,6 +5,7 @@ import { HomeScreen } from './screens/Home';
 import { JoinScreen } from './screens/Join';
 import { StatusScreen } from './screens/Status';
 import { lazy, Suspense } from 'react';
+import { ReceptionScreen } from './screens/Reception';
 
 const StyleGuide = import.meta.env.DEV
   ? lazy(() => import('./screens/StyleGuide'))
@@ -99,7 +100,7 @@ export default function App() {
         <Route path="/" element={<HomeScreen language={language} />} />
         <Route path="/join" element={<JoinScreen language={language} />} />
         <Route path="/status/:id" element={<StatusPage language={language} />} />
-        <Route path="/reception" element={<EmptyPage language={language} title="Reception" />} />
+        <Route path="/reception" element={<ReceptionScreen language={language} />} />
         <Route path="/barber/:name" element={<BarberPage language={language} />} />
         <Route path="/display" element={<EmptyPage language={language} title="LateCuts" />} />
         <Route path="/admin" element={<EmptyPage language={language} title="Owner Settings" />} />

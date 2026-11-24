@@ -120,6 +120,10 @@
 - A phone whose last spot is final (Done, Cancelled, No-show) may join again.
 - The check and the creation happen as **one atomic step** on the server, so two taps or two devices at the same instant cannot create two spots.
 - **Double-tap protection:** each Confirm carries a one-time request id; repeating the same request id returns the same spot, never a second one.
+- Duplicate detection uses `HMAC-SHA256(PHONE_HMAC_SECRET, normalized_phone)`.
+- `PHONE_HMAC_SECRET` is generated and stored only in the server/Supabase secret manager.
+- The raw normalized phone may be retained for the private staff workflow, but the HMAC is the indexed lookup key.
+- The HMAC secret is never exposed to `VITE_*`, logs, RLS policies visible to clients or browser code.
 
 ### 5.3 When online joining is allowed
 
@@ -333,6 +337,14 @@ Planned minutes are guesses. Once real times exist, the **estimate** (and only t
 
 Everything else (all statuses, Call next, estimates, validation, PIN, sync) behaves exactly as written. The Owner screen shows a small "Demo" tag when it is on, and the README says so. Demo mode is off in normal use and never changes any rule's logic, only whether those two time-based closings are enforced.
 
+**Historical retention and recovery**
+- Final spots remain stored for 30 days from `finishedAt`, or from the timestamp set when the day system closes a spot.
+- Active spots are never deleted by retention.
+- Recovery links expire 10 minutes after creation, are single-use and require staff-assisted in-person verification.
+- A recovery link contains only a random high-entropy token. The database stores only its digest, expiry and one-time-used timestamp.
+- The recovery token is not placed in customer status URLs.
+- Expired or used recovery links are refused and never reveal another customer's spot.
+
 ## 13. Owner settings rules
 
 **Services**
@@ -356,10 +368,18 @@ Everything else (all statuses, Call next, estimates, validation, PIN, sync) beha
 
 ## 14. Staff access and who sees what
 
+**Supabase architecture**
+- PostgreSQL RPC functions are the only supported mutations for joins and queue moves.
+- Public reads use public-safe views/projections. Direct public writes to queue tables are prohibited.
+- Supabase Realtime only publishes public-safe projections or private customer events scoped to the matching capability.
+- The service-role key is server-only and is never sent to the frontend or placed in `VITE_*` environment variables.
+
 **PIN and sessions**
 - The PIN is checked **on the server**. A correct PIN gives a staff session for the browser tab. No staff screen loads staff data without it.
 - After `PIN_MAX_TRIES` wrong tries in a row from one device, that device is locked for `PIN_LOCK_SECONDS`, with a visible countdown.
 - Staff actions (Call next, No-show, reception Cancel, Add walk-in, Start, Done, Break, all Owner Settings) are refused without a valid session.
+- Staff sessions expire after at most 12 hours, are individually revocable, and every staff RPC validates the session, role and expiry before mutation.
+- Staff JWT issuance is server-only. Supabase JWT claims identify role/session; RLS and RPC verify the corresponding server-side staff-session record.
 
 **Visibility**
 
@@ -373,8 +393,16 @@ Everything else (all statuses, Call next, estimates, validation, PIN, sync) beha
 
 - The customer's link works from the random spot id only. Nothing about other customers can be reached from it.
 - Personal details are never put in URLs, TV content, or error messages.
+- Customer private access uses a random spot ID plus a separate random capability. The capability is stored privately on the customer's device and is never put in a URL.
+- A customer can read/cancel only the matching capability-owned spot. Possession of the spot ID alone is insufficient.
 
 ## 15. Keeping screens in sync
+
+**Strict FCFS implementation requirement**
+- Call Next serializes selection for the whole queue, so two concurrent Reception requests cannot allow a later eligible customer to bypass an earlier eligible customer.
+- PostgreSQL uses one transaction and a queue-wide serialization/advisory lock for the candidate decision, not only a barber-row lock.
+- `SKIP LOCKED` is prohibited for Call Next candidate selection because it may skip an earlier eligible Waiting spot that is locked or temporarily changing.
+- A second Call Next request for the same barber waits or gets the barber-busy result after the first transaction commits.
 
 - Any change (join, call, start, done, cancel, no-show, break, settings, **[P1 · U3]** on my way) must be visible on every other screen within `SYNC_MAX_SECONDS`, without refreshing.
 - Any approach that meets this is fine (for example polling every 2–3 seconds, or a hosted realtime database). **Before using it, the agent must explain the choice in 3 lines and wait for approval.**

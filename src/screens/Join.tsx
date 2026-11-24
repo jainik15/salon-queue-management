@@ -16,6 +16,7 @@ import {
   type DummySpot,
 } from '../dummySpot';
 import { BrandLockup, EmptyChairIllustration } from '../components/DesignSystem';
+import { supabase, supabaseConfigured } from '../lib/supabase';
 
 type JoinScreenProps = {
   language: Language;
@@ -135,8 +136,78 @@ export function JoinScreen({ language }: JoinScreenProps) {
     if (nextServiceError) return;
 
     setSubmitting(true);
-    window.setTimeout(() => {
+    window.setTimeout(async () => {
       const normalizedPhone = normalizePhone(phone);
+
+      if (supabaseConfigured && supabase) {
+        try {
+          const joinRequestId = crypto.randomUUID();
+          const { data, error } = await supabase.rpc('join_queue', {
+            p_name: name.trim(),
+            p_phone: normalizedPhone,
+            p_service_ids: chosenServices.map((service) => service.id),
+            p_preference_barber_id: preference === 'any'
+              ? null
+              : preference === 'ravi'
+                ? '00000000-0000-0000-0000-000000000001'
+                : preference === 'amit'
+                  ? '00000000-0000-0000-0000-000000000002'
+                  : '00000000-0000-0000-0000-000000000003',
+            p_join_request_id: joinRequestId,
+          });
+
+          if (error) {
+            setSubmitError(translate(language, 'join.couldNotJoin'));
+            setSubmitting(false);
+            return;
+          }
+
+          const result = data as {
+            spot_id: string;
+            token: string;
+            already_active: boolean;
+            customer_capability: string;
+          };
+
+          const activeSpot = createDummySpot(result.spot_id, normalizedPhone, {
+            token: result.token,
+            capability: result.customer_capability,
+            status: 'Waiting',
+            position: 4,
+            estimate: 35,
+            initialEstimate: 45,
+            preference: preference === 'any'
+              ? 'Any'
+              : preference === 'ravi'
+                ? 'Ravi'
+                : preference === 'amit'
+                  ? 'Amit'
+                  : 'Imran',
+            barber: 'Amit',
+            joinedAt: new Date().toISOString(),
+            services: chosenServices.map((service) => translate(language, service.nameKey)),
+            totalMinutes,
+            totalPrice,
+          });
+
+          window.localStorage.setItem('latecuts-last-name', name.trim());
+          window.localStorage.setItem('latecuts-last-phone', normalizedPhone);
+          saveDummySpot(window.localStorage, activeSpot);
+          navigate(getStatusUrl(activeSpot), {
+            state: {
+              spot: activeSpot,
+              newSpotToken: activeSpot.token,
+              existingSpotToken: result.already_active ? activeSpot.token : undefined,
+            },
+          });
+          return;
+        } catch {
+          setSubmitError(translate(language, 'join.couldNotJoin'));
+          setSubmitting(false);
+          return;
+        }
+      }
+
       const existingSpotJson = window.localStorage.getItem(DUMMY_SPOT_STORAGE_KEY);
       let existingSpot: ActiveSpot | null = null;
 

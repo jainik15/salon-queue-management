@@ -48,6 +48,12 @@ Web app for a salon with several barbers: customers join a live queue from their
   5. Fits a free tier.
 - **Do not** use `localStorage`/browser storage as the shared store (devices wouldn't sync), and do not rely on server memory alone. Watch free-tier traps: a file database on a host with an ephemeral disk loses data on restart; free servers can sleep, so the first request may be slow (show skeletons, never a blank screen).
 - Use **server time** (India, Asia/Kolkata) for every timestamp and duration, through one time helper.
+- **Approved backend direction:** Supabase PostgreSQL + Realtime, trusted PostgreSQL RPC functions, and RLS. A separate Express server is not planned unless implementation proves a specific requirement cannot be met securely by Supabase.
+- Queue operations are server-trusted and atomic. `src/rules/` remains the authoritative tested business-rules module; SQL must implement the same rules and may not change them.
+- Strict global FCFS is server-controlled. Supabase/PostgreSQL implementation must serialize Call Next selection and must not use `SKIP LOCKED` as a way to bypass an earlier eligible customer.
+- Customer status and cancellation require the random spot ID plus a separate random capability. The capability is never placed in a URL.
+- Duplicate-phone detection uses a server-secret keyed HMAC of the normalized 10-digit phone. Raw phones are only stored as necessary for staff/private records; the HMAC secret is server-only.
+- Staff JWTs have a maximum 12-hour lifetime, are revocable, and every staff RPC validates the staff session and role.
 
 ## 5. Working rules
 

@@ -119,4 +119,8 @@ export default {
   'status.progressCalled': 'બોલાવ્યા',
   'status.progressInChair': 'ખુરશી પર',
   'status.progressDone': 'પૂર્ણ',
+  'reception.title': 'રિસેપ્શન',
+  'reception.queueTitle': 'આજની કતાર',
+  'reception.waiting': 'રાહ જોઈ રહ્યા છીએ',
+  'staff.access': 'સ્ટાફ ઍક્સેસ',
 } as const;

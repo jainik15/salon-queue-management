@@ -144,6 +144,10 @@ Anything not in `02-screens.md` or `03-flows-rules.md` is out of scope. If somet
 ## 11. Constraints and assumptions
 
 - **Platform:** React + Vite + Tailwind web app. Hosting on free tiers (Vercel for the frontend; Render or Railway if a backend is needed). The live link must open on a phone with no setup.
+- **Backend:** Supabase PostgreSQL with trusted RPC functions and Realtime. Supabase RLS and public-safe projections protect data. A separate Express server is not planned unless implementation proves it necessary.
+- **Customer authorization:** a random spot ID identifies the page, but a separate random capability is required for private status/cancellation operations. The capability is never placed in the URL.
+- **Duplicate phone detection:** normalized 10-digit phone numbers are keyed-HMACed with a server-only secret.
+- **Staff security:** staff PIN verification happens on the server. Staff sessions expire after at most 12 hours and can be revoked.
 - **Time:** about 45 minutes for documents and 2–3 hours for building. This is why P1 and P2 exist as separate, optional tiers.
 - **Devices:** Android Chrome and iPhone Safari for customers; a 10-inch tablet for reception; a TV showing a browser (often a laptop or stick).
 - **Browser limits to design around:** iPhones do not support vibration; browsers block sound until someone taps the page once (the TV needs a "Tap to turn on sound" step); alerts only work while the customer's page is open.

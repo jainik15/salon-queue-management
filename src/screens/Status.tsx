@@ -11,6 +11,7 @@ import {
   getStaleStatusFallback,
   type DummySpot,
 } from '../dummySpot';
+import { supabase, supabaseConfigured } from '../lib/supabase';
 
 type StatusScreenProps = {
   language: Language;
@@ -42,7 +43,47 @@ export function StatusScreen({ language }: StatusScreenProps) {
       const storedSpot = readStoredDummySpot(window.localStorage);
       const exactSpot = readDummySpot(window.localStorage, spotId);
       const navigationSpot = (location.state as { spot?: Partial<DummySpot> } | null)?.spot ?? null;
-      const resolvedSpot = resolveDummySpot(spotId, navigationSpot, exactSpot);
+      let resolvedSpot = resolveDummySpot(spotId, navigationSpot, exactSpot);
+
+      if (supabaseConfigured && supabase) {
+        const fallbackSpot = resolvedSpot ?? storedSpot;
+        if (!fallbackSpot?.capability) {
+          setLoadError(true);
+          return;
+        }
+        supabase.rpc('get_private_status', {
+          p_spot_id: spotId,
+          p_customer_capability: fallbackSpot.capability,
+        }).then(({ data, error }) => {
+          if (error || !data) {
+            setLoadError(true);
+            return;
+          }
+          const privateStatus = data as {
+            spot_id: string;
+            token: string;
+            status: DummySpot['status'];
+            preference: DummySpot['preference'];
+            assigned_barber_id: string | null;
+            estimate: number | null;
+            joined_at: string;
+            total_minutes: number;
+            total_price: number;
+          };
+          setSpot({
+            ...fallbackSpot,
+            id: String(privateStatus.spot_id),
+            token: String(privateStatus.token),
+            status: privateStatus.status,
+            preference: privateStatus.preference,
+            estimate: privateStatus.estimate ?? fallbackSpot.estimate,
+            initialEstimate: fallbackSpot.initialEstimate,
+            joinedAt: String(privateStatus.joined_at),
+            totalMinutes: privateStatus.total_minutes,
+            totalPrice: privateStatus.total_price,
+          });
+        });
+      }
 
       if (!resolvedSpot) {
         const staleFallback = getStaleStatusFallback(spotId, storedSpot);
@@ -112,6 +153,28 @@ export function StatusScreen({ language }: StatusScreenProps) {
 
   const confirmCancel = () => {
     if (!spot || spot.status !== 'Waiting' || !isAllowedMove('Waiting', 'Cancelled')) return;
+    if (supabaseConfigured && supabase) {
+      if (!spot.capability) {
+        setLoadError(true);
+        setCancelOpen(false);
+        return;
+      }
+      supabase.rpc('cancel_waiting', {
+        p_spot_id: spot.id,
+        p_customer_capability: spot.capability,
+      }).then(({ data, error }) => {
+        if (error) {
+          setLoadError(true);
+          setCancelOpen(false);
+          return;
+        }
+        const cancelledSpot: DummySpot = { ...spot, status: 'Cancelled' };
+        window.localStorage.setItem(DUMMY_SPOT_STORAGE_KEY, JSON.stringify(cancelledSpot));
+        setSpot(cancelledSpot);
+        setCancelOpen(false);
+      });
+      return;
+    }
     const cancelledSpot: DummySpot = { ...spot, status: 'Cancelled' };
     window.localStorage.setItem(DUMMY_SPOT_STORAGE_KEY, JSON.stringify(cancelledSpot));
     setSpot(cancelledSpot);

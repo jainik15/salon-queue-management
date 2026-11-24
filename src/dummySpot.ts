@@ -6,6 +6,7 @@ export type DummySpot = {
   id: string;
   token: string;
   phone: string;
+  capability?: string;
   status: SpotStatus;
   position: number;
   estimate: number;
