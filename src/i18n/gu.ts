@@ -119,6 +119,8 @@ export default {
   'status.progressCalled': 'બોલાવ્યા',
   'status.progressInChair': 'ખુરશી પર',
   'status.progressDone': 'પૂર્ણ',
+  'tv.noneCalled': 'હાલમાં કોઈને બોલાવવામાં આવ્યું નથી',
+  'tv.emptyQueue': 'કોઈ રાહ જોતું નથી — સીધા અંદર આવો!',
   'reception.title': 'રિસેપ્શન',
   'reception.queueTitle': 'આજની કતાર',
   'reception.waiting': 'રાહ જોઈ રહ્યા છીએ',

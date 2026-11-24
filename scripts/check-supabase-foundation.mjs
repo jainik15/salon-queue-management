@@ -4,8 +4,8 @@ const migrations = readdirSync('supabase/migrations')
   .filter((name) => name.endsWith('.sql'))
   .sort();
 
-if (migrations.length !== 6) {
-  throw new Error(`Expected 6 Supabase migrations, found ${migrations.length}`);
+if (migrations.length !== 7) {
+  throw new Error(`Expected 7 Supabase migrations, found ${migrations.length}`);
 }
 
 const forbidden = [
@@ -26,6 +26,7 @@ const rls = readFileSync('supabase/migrations/20261124121000_latecuts_public_vie
 const rpcs = readFileSync('supabase/migrations/20261124122000_latecuts_queue_rpc.sql', 'utf8');
 const receptionRpcs = readFileSync('supabase/migrations/20261124124000_latecuts_reception_rpc.sql', 'utf8');
 const barberRpcs = readFileSync('supabase/migrations/20261124125000_latecuts_barber_rpc.sql', 'utf8');
+const ownerRpcs = readFileSync('supabase/migrations/20261124126000_latecuts_owner_rpc.sql', 'utf8');
 
 const requiredFoundation = [
   'create table if not exists public.spots',
@@ -66,7 +67,7 @@ const requiredRpcs = [
   'create or replace function public.add_walk_in',
 ];
 
-const allRpcSql = `${rpcs}\n${receptionRpcs}\n${barberRpcs}`;
+const allRpcSql = `${rpcs}\n${receptionRpcs}\n${barberRpcs}\n${ownerRpcs}`;
 
 for (const token of requiredRpcs) {
   if (!allRpcSql.includes(token)) throw new Error(`Missing RPC: ${token}`);

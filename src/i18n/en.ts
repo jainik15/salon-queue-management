@@ -119,6 +119,8 @@ export default {
   'status.progressCalled': 'Called',
   'status.progressInChair': 'In chair',
   'status.progressDone': 'Done',
+  'tv.noneCalled': 'No customer called',
+  'tv.emptyQueue': 'No one waiting — walk right in!',
   'reception.title': 'Reception',
   'reception.queueTitle': 'Today’s queue',
   'reception.waiting': 'Waiting',

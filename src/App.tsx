@@ -7,6 +7,8 @@ import { StatusScreen } from './screens/Status';
 import { lazy, Suspense } from 'react';
 import { ReceptionScreen } from './screens/Reception';
 import { BarberScreen } from './screens/Barber';
+import { TvScreen } from './screens/Tv';
+import { OwnerScreen } from './screens/Owner';
 
 const StyleGuide = import.meta.env.DEV
   ? lazy(() => import('./screens/StyleGuide'))
@@ -104,7 +106,8 @@ export default function App() {
         <Route path="/reception" element={<ReceptionScreen language={language} />} />
         <Route path="/barber/:name" element={<BarberPage language={language} />} />
         <Route path="/display" element={<EmptyPage language={language} title="LateCuts" />} />
-        <Route path="/admin" element={<EmptyPage language={language} title="Owner Settings" />} />
+        <Route path="/tv" element={<TvScreen language={language} />} />
+        <Route path="/admin" element={<OwnerScreen language={language} />} />
         {StyleGuide && (
           <Route
             path="/_styleguide"
