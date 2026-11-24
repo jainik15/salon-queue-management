@@ -18,6 +18,7 @@ import {
   saveDummySpot,
   resolveDummySpot,
   getStaleStatusFallback,
+  readStoredDummySpot,
   type SpotStorage,
 } from '../dummySpot';
 
@@ -129,6 +130,7 @@ describe('dummy Join to Status handoff', () => {
     expect(readDummySpot(storage, spot.id)).toEqual(spot);
     expect(resolveDummySpot(spot.id, spot, null)).toEqual(spot);
     expect(resolveDummySpot('wrong-id', spot, null)).toBeNull();
+    expect(readStoredDummySpot(storage)).toEqual(spot);
     expect(getStaleStatusFallback('16c12319-c429-421e-b38c-c117ad920dfc', spot))
       .toBe('/status/spot-regression-id');
   });

@@ -5,6 +5,7 @@ import { formatWaitEstimate, isAllowedMove, resolveDemoStatus, RULE_CONSTANTS, t
 import {
   DUMMY_SPOT_STORAGE_KEY,
   readDummySpot,
+  readStoredDummySpot,
   resolveDummySpot,
   getStatusUrl,
   getStaleStatusFallback,
@@ -38,9 +39,10 @@ export function StatusScreen({ language }: StatusScreenProps) {
       }
 
       const spotId = decodeURIComponent(location.pathname.split('/')[2] ?? '');
-      const storedSpot = readDummySpot(window.localStorage, spotId);
+      const storedSpot = readStoredDummySpot(window.localStorage);
+      const exactSpot = readDummySpot(window.localStorage, spotId);
       const navigationSpot = (location.state as { spot?: Partial<DummySpot> } | null)?.spot ?? null;
-      const resolvedSpot = resolveDummySpot(spotId, navigationSpot, storedSpot);
+      const resolvedSpot = resolveDummySpot(spotId, navigationSpot, exactSpot);
 
       if (!resolvedSpot) {
         const staleFallback = getStaleStatusFallback(spotId, storedSpot);

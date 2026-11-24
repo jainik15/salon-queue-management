@@ -42,13 +42,17 @@ export function readDummySpot(
   storage: SpotStorage,
   spotId: string,
 ): DummySpot | null {
+  const spot = readStoredDummySpot(storage);
+  return spot?.id === spotId ? spot : null;
+}
+
+export function readStoredDummySpot(storage: SpotStorage): DummySpot | null {
   const raw = storage.getItem(DUMMY_SPOT_STORAGE_KEY);
   if (!raw) return null;
 
   try {
     const parsed = JSON.parse(raw) as Partial<DummySpot>;
     if (
-      parsed.id !== spotId ||
       !parsed.token ||
       !parsed.status ||
       parsed.position === undefined ||
