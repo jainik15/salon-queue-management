@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { translate, type Language } from '../i18n';
 import { BrandLockup, EmptyChairIllustration } from '../components/DesignSystem';
+import { DUMMY_SPOT_STORAGE_KEY, readDummySpot } from '../dummySpot';
 
 type HomeScreenProps = {
   language: Language;
@@ -30,17 +31,18 @@ export function HomeScreen({ language }: HomeScreenProps) {
     const updateConnection = () => setConnectionLost(!navigator.onLine);
     updateConnection();
 
-    const storedSpot = window.localStorage.getItem('latecuts-active-spot');
+    const storedSpot = window.localStorage.getItem(DUMMY_SPOT_STORAGE_KEY);
     if (storedSpot) {
       try {
-        const parsed = JSON.parse(storedSpot) as ActiveSpot;
-        if (parsed.status && ['Done', 'Cancelled', 'No-show'].includes(parsed.status)) {
+        const spotId = (JSON.parse(storedSpot) as { id?: string }).id;
+        const parsed = spotId ? readDummySpot(window.localStorage, spotId) : null;
+        if (!parsed || ['Done', 'Cancelled', 'No-show'].includes(parsed.status)) {
           setActiveSpot(null);
         } else {
           setActiveSpot(parsed);
         }
       } catch {
-        window.localStorage.removeItem('latecuts-active-spot');
+        window.localStorage.removeItem(DUMMY_SPOT_STORAGE_KEY);
         setActiveSpot(null);
       }
     }

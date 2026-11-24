@@ -10,6 +10,14 @@ import {
   formatWaitEstimate,
   resolveDemoStatus,
 } from './queue';
+import {
+  DUMMY_SPOT_STORAGE_KEY,
+  createDummySpot,
+  getStatusUrl,
+  readDummySpot,
+  saveDummySpot,
+  type SpotStorage,
+} from '../dummySpot';
 
 describe('wait estimates', () => {
   it('passes examples E1-E9', () => {
@@ -84,5 +92,38 @@ describe('demo status controls', () => {
     expect(resolveDemoStatus('Called', 'Waiting')).toBe('Called');
     expect(resolveDemoStatus('Done', 'Called')).toBe('Done');
     expect(resolveDemoStatus('Cancelled', 'Waiting')).toBe('Cancelled');
+  });
+});
+
+describe('dummy Join to Status handoff', () => {
+  it('creates a spot, includes its ID in the Status URL, and retrieves the exact spot', () => {
+    const values = new Map<string, string>();
+    const storage: SpotStorage = {
+      getItem: (key) => values.get(key) ?? null,
+      setItem: (key, value) => values.set(key, value),
+      removeItem: (key) => values.delete(key),
+    };
+
+    const spot = createDummySpot('spot-regression-id', '9876543210', {
+      token: 'S-14',
+      status: 'Waiting',
+      position: 4,
+      estimate: 35,
+      initialEstimate: 45,
+      preference: 'Any',
+      barber: 'Amit',
+      joinedAt: '2026-11-24T12:00:00.000Z',
+      services: ['Haircut', 'Beard trim'],
+      totalMinutes: 45,
+      totalPrice: 230,
+    });
+
+    saveDummySpot(storage, spot);
+    const statusUrl = getStatusUrl(spot);
+
+    expect(statusUrl).toBe('/status/spot-regression-id');
+    expect(statusUrl).toContain(spot.id);
+    expect(values.has(DUMMY_SPOT_STORAGE_KEY)).toBe(true);
+    expect(readDummySpot(storage, spot.id)).toEqual(spot);
   });
 });

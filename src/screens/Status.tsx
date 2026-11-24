@@ -2,27 +2,14 @@ import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { translate, type Language } from '../i18n';
 import { formatWaitEstimate, isAllowedMove, resolveDemoStatus, RULE_CONSTANTS, type SpotStatus } from '../rules/queue';
+import {
+  DUMMY_SPOT_STORAGE_KEY,
+  readDummySpot,
+  type DummySpot,
+} from '../dummySpot';
 
 type StatusScreenProps = {
   language: Language;
-};
-
-type DummySpot = {
-  id: string;
-  token: string;
-  phone: string;
-  status: SpotStatus;
-  position: number;
-  estimate: number;
-  initialEstimate: number;
-  preference: 'Any' | 'Ravi' | 'Amit' | 'Imran';
-  barber: 'Ravi' | 'Amit' | 'Imran';
-  joinedAt: string;
-  services: string[];
-  totalMinutes: number;
-  totalPrice: number;
-  barberOnBreak?: boolean;
-  noWorkingBarber?: boolean;
 };
 
 const statusSteps: SpotStatus[] = ['Waiting', 'Called', 'In chair', 'Done'];
@@ -48,49 +35,7 @@ export function StatusScreen({ language }: StatusScreenProps) {
       }
 
       const spotId = decodeURIComponent(location.pathname.split('/')[2] ?? '');
-      const storedJson = window.localStorage.getItem('latecuts-active-spot');
-      let storedSpot: DummySpot | null = null;
-
-      if (storedJson) {
-        try {
-          const parsed = JSON.parse(storedJson) as Partial<DummySpot>;
-          if (
-            parsed.id &&
-            parsed.token &&
-            parsed.status &&
-            parsed.position !== undefined &&
-            parsed.estimate !== undefined &&
-            parsed.initialEstimate !== undefined &&
-            parsed.preference &&
-            parsed.barber &&
-            parsed.joinedAt &&
-            parsed.services &&
-            parsed.totalMinutes !== undefined &&
-            parsed.totalPrice !== undefined
-          ) {
-            const validSpot: DummySpot = {
-              id: parsed.id,
-              token: parsed.token,
-              phone: parsed.phone ?? '',
-              status: parsed.status,
-              position: parsed.position,
-              estimate: parsed.estimate,
-              initialEstimate: parsed.initialEstimate,
-              preference: parsed.preference,
-              barber: parsed.barber,
-              joinedAt: parsed.joinedAt,
-              services: parsed.services,
-              totalMinutes: parsed.totalMinutes,
-              totalPrice: parsed.totalPrice,
-              barberOnBreak: parsed.barberOnBreak,
-              noWorkingBarber: parsed.noWorkingBarber,
-            };
-            storedSpot = validSpot;
-          }
-        } catch {
-          storedSpot = null;
-        }
-      }
+      const storedSpot = readDummySpot(window.localStorage, spotId);
 
       if (!storedSpot || storedSpot.id !== spotId) {
         setSpot(null);
@@ -151,7 +96,7 @@ export function StatusScreen({ language }: StatusScreenProps) {
   const confirmCancel = () => {
     if (!spot || spot.status !== 'Waiting' || !isAllowedMove('Waiting', 'Cancelled')) return;
     const cancelledSpot: DummySpot = { ...spot, status: 'Cancelled' };
-    window.localStorage.setItem('latecuts-active-spot', JSON.stringify(cancelledSpot));
+    window.localStorage.setItem(DUMMY_SPOT_STORAGE_KEY, JSON.stringify(cancelledSpot));
     setSpot(cancelledSpot);
     setCancelOpen(false);
   };

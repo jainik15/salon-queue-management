@@ -8,6 +8,13 @@ import {
   validateJoinPhone,
   validateServiceSelection,
 } from '../rules/queue';
+import {
+  DUMMY_SPOT_STORAGE_KEY,
+  createDummySpot,
+  getStatusUrl,
+  saveDummySpot,
+  type DummySpot,
+} from '../dummySpot';
 import { BrandLockup } from '../components/DesignSystem';
 
 type JoinScreenProps = {
@@ -36,21 +43,7 @@ const dummyBarbers = [
   { id: 'imran', name: 'Imran', state: 'break' as const },
 ];
 
-type ActiveSpot = {
-  id: string;
-  token: string;
-  phone: string;
-  status: 'Waiting' | 'Called' | 'In chair' | 'Done' | 'Cancelled' | 'No-show';
-  position: number;
-  estimate: number;
-  initialEstimate: number;
-  preference: 'Any' | 'Ravi' | 'Amit' | 'Imran';
-  barber: 'Ravi' | 'Amit' | 'Imran';
-  joinedAt: string;
-  services: string[];
-  totalMinutes: number;
-  totalPrice: number;
-};
+type ActiveSpot = DummySpot;
 
 export function JoinScreen({ language }: JoinScreenProps) {
   const navigate = useNavigate();
@@ -144,7 +137,7 @@ export function JoinScreen({ language }: JoinScreenProps) {
     setSubmitting(true);
     window.setTimeout(() => {
       const normalizedPhone = normalizePhone(phone);
-      const existingSpotJson = window.localStorage.getItem('latecuts-active-spot');
+      const existingSpotJson = window.localStorage.getItem(DUMMY_SPOT_STORAGE_KEY);
       let existingSpot: ActiveSpot | null = null;
 
       if (existingSpotJson) {
@@ -162,16 +155,14 @@ export function JoinScreen({ language }: JoinScreenProps) {
         existingSpot.status !== 'No-show' &&
         existingSpot.phone === normalizedPhone
       ) {
-        navigate(`/status/${existingSpot.id}`, {
+        navigate(getStatusUrl(existingSpot), {
           state: { existingSpotToken: existingSpot.token },
         });
         return;
       }
 
-      const activeSpot: ActiveSpot = {
-        id: crypto.randomUUID(),
+      const activeSpot = createDummySpot(crypto.randomUUID(), normalizedPhone, {
         token: 'S-14',
-        phone: normalizedPhone,
         status: 'Waiting',
         position: 4,
         estimate: 35,
@@ -182,12 +173,12 @@ export function JoinScreen({ language }: JoinScreenProps) {
         services: chosenServices.map((service) => translate(language, service.nameKey)),
         totalMinutes,
         totalPrice,
-      };
+      });
 
       window.localStorage.setItem('latecuts-last-name', name.trim());
       window.localStorage.setItem('latecuts-last-phone', normalizedPhone);
-      window.localStorage.setItem('latecuts-active-spot', JSON.stringify(activeSpot));
-      navigate(`/status/${activeSpot.id}`, {
+      saveDummySpot(window.localStorage, activeSpot);
+      navigate(getStatusUrl(activeSpot), {
         state: { newSpotToken: activeSpot.token },
       });
     }, 500);
