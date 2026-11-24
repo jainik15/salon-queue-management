@@ -15,7 +15,7 @@ import {
   saveDummySpot,
   type DummySpot,
 } from '../dummySpot';
-import { BrandLockup } from '../components/DesignSystem';
+import { BrandLockup, EmptyChairIllustration } from '../components/DesignSystem';
 
 type JoinScreenProps = {
   language: Language;
@@ -219,7 +219,14 @@ export function JoinScreen({ language }: JoinScreenProps) {
     <JoinPageShell language={language} connectionLost={connectionLost}>
       <form className="join-form" onSubmit={handleSubmit} noValidate>
         <section className="join-content">
-          <h2>{translate(language, 'join.details')}</h2>
+          <div className="join-masthead" aria-hidden="true">
+            <span>JOIN TICKET</span>
+            <span>LC / QUEUE</span>
+          </div>
+          <h2 className="join-section-title">
+            <span className="join-section-number">01</span>
+            {translate(language, 'join.details')}
+          </h2>
           <label className="join-field">
             <span>{translate(language, 'join.name')}</span>
             <input
@@ -253,7 +260,10 @@ export function JoinScreen({ language }: JoinScreenProps) {
             {phoneError && <span className="field-error" id="phone-error">{phoneError}</span>}
           </label>
 
-          <h2>{translate(language, 'join.services')}</h2>
+          <h2 className="join-section-title">
+            <span className="join-section-number">02</span>
+            {translate(language, 'join.services')}
+          </h2>
           {atServiceLimit && (
             <p className="service-limit-hint">{translate(language, 'join.maxServices')}</p>
           )}
@@ -284,7 +294,10 @@ export function JoinScreen({ language }: JoinScreenProps) {
           </div>
           {serviceError && <p className="field-error">{serviceError}</p>}
 
-          <h2>{translate(language, 'join.chooseBarber')}</h2>
+          <h2 className="join-section-title">
+            <span className="join-section-number">03</span>
+            {translate(language, 'join.chooseBarber')}
+          </h2>
           <div className="barber-options" role="radiogroup">
             <label className={`barber-option ${preference === 'any' ? 'selected' : ''}`}>
               <input
@@ -322,21 +335,30 @@ export function JoinScreen({ language }: JoinScreenProps) {
         </section>
 
         <div className="join-summary">
-          {submitError && <p className="field-error submit-error">{submitError}</p>}
-          {chosenServices.length === 0 ? (
-            <p className="summary-line">{translate(language, 'join.pickOne')}</p>
-          ) : (
-            <>
-              <p className="summary-line">
-                {translate(language, 'join.total', { minutes: totalMinutes, price: totalPrice })}
-              </p>
-              <p className="summary-estimate">
-                {translate(language, 'join.expectedWait', {
-                  time: translate(language, 'estimate.about', { time: '35 min' }),
-                })}
-              </p>
-            </>
-          )}
+          <div className="summary-ticket">
+            <div className="summary-ticket-main">
+              <span className="summary-ticket-label">LateCuts / Total</span>
+              {submitError && <p className="field-error submit-error">{submitError}</p>}
+              {chosenServices.length === 0 ? (
+                <p className="summary-line">{translate(language, 'join.pickOne')}</p>
+              ) : (
+                <>
+                  <p className="summary-line">
+                    {translate(language, 'join.total', { minutes: totalMinutes, price: totalPrice })}
+                  </p>
+                  <p className="summary-estimate">
+                    {translate(language, 'join.expectedWait', {
+                      time: translate(language, 'estimate.about', { time: '35 min' }),
+                    })}
+                  </p>
+                </>
+              )}
+            </div>
+            <div className="summary-ticket-stub" aria-hidden="true">
+              <span>{chosenServices.length}/3</span>
+              <i />
+            </div>
+          </div>
           <button
             className="primary-button confirm-button"
             type="submit"
