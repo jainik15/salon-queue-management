@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Gujarati:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Noto Sans', 'Noto Sans Gujarati', sans-serif;
+  color: #F9FAFB;
+  background: #1F2937;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --charcoal: #1F2937;
+  --surface: #374151;
+  --surface-raised: #4B5563;
+  --gold: #D4A017;
+  --gold-pressed: #B8890F;
+  --text: #F9FAFB;
+  --muted: #9CA3AF;
+  --success: #22C55E;
+  --danger: #EF4444;
+  --amber: #F59E0B;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--charcoal);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  background: var(--charcoal);
+}
+
+.top-bar {
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--surface-raised);
+  background: var(--charcoal);
+}
+
+.brand,
+.language-toggle,
+.primary-button {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-weight: 700;
+}
+
+.logo-mark {
+  color: var(--gold);
+  font-size: 24px;
+}
+
+.screen-title {
+  margin: 0;
+  font-size: 18px;
+  text-align: center;
+}
+
+.language-toggle {
+  justify-self: end;
+  min-width: 72px;
+  min-height: 44px;
+  border: 1px solid var(--surface-raised);
+  border-radius: 12px;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.language-toggle:focus-visible,
+.primary-button:focus-visible,
+.brand:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.empty-page {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 24px;
+  text-align: center;
+}
+
+.placeholder-icon {
+  width: 80px;
+  height: 80px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--surface-raised);
+  border-radius: 16px;
+  color: var(--gold);
+  background: var(--surface);
+  font-size: 32px;
+}
+
+.primary-button {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: var(--gold);
+  color: var(--charcoal);
+  font-weight: 700;
+}
+
+.primary-button:active {
+  background: var(--gold-pressed);
+}
+
+@media (max-width: 600px) {
+  .top-bar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .screen-title {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
