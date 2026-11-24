@@ -29,12 +29,16 @@ These names are fixed. The same word is used in every screen, message and the la
 
 | Token | Value | Used for |
 |---|---|---|
+| `ink` | `#111827` | Deepest background and ticket/TV backgrounds |
 | `charcoal` | `#1F2937` | Page background |
 | `surface` | `#374151` | Cards, inputs |
 | `surface-raised` | `#4B5563` | Borders, dividers, pressed cards |
 | `gold` | `#D4A017` | Primary buttons, selected states, token numbers, highlights |
 | `gold-pressed` | `#B8890F` | Pressed state of gold buttons |
-| `text` | `#F9FAFB` | Main text |
+| `gold-soft` | `#E8C766` | Gold accents and hover highlights on dark backgrounds |
+| `gold-deep` | `#8A6508` | Gold text on light backgrounds only |
+| `ivory` | `#F6F1E7` | Main text and warm paper tones |
+| `text` | `#F9FAFB` | Legacy text token retained where already used |
 | `muted` | `#9CA3AF` | Secondary text, hints |
 | `success` | `#22C55E` | Free, success toasts |
 | `danger` | `#EF4444` | Errors, destructive buttons |
@@ -42,17 +46,25 @@ These names are fixed. The same word is used in every screen, message and the la
 | `qr-tile` | `#FFFFFF` on `#111827` modules | QR code only (needs high contrast to scan) |
 
 - Text on gold is `charcoal`. Never put gold text on white.
-- **Shape:** cards 16 px radius, buttons 12 px, chips and avatars fully rounded. 4 px spacing grid.
-- **Type:** one sans-serif family that renders Gujarati well (for example Noto Sans with Noto Sans Gujarati as a fallback). Numbers use tabular figures so counting timers don't jitter.
+- **Shape:** tickets 6 px radius, cards 16 px radius, buttons 12 px, chips and avatars fully rounded. Use a 4 px spacing grid.
+- **Type:** Cardo Bold for display and Noto Serif Gujarati for Gujarati display; Barlow Condensed SemiBold for numerals; DM Sans with Noto Sans Gujarati for UI. Numbers use tabular figures.
+- **Texture:** faint charcoal paper grain at about 3–4% opacity with a subtle warm vignette. Use the barber-pole pattern at most once per screen.
+- **Ticket:** 6 px radius with semicircular side notches, a dotted perforation line and a barcode strip on the stub.
+- **Motion:** transitions 150–250 ms; press feedback 80 ms; split-flap 220 ms per character with 40 ms stagger; the "It's your turn!" fill 350 ms.
 - **Never rely on colour alone.** Every state also has an icon or text (for example "Busy" with a dot and the word).
 
 ### 1.2 Device layouts
 
 | Device | Screens | Canvas | Rules |
 |---|---|---|---|
-| **Phone** | 1, 2, 3, 5, 7 | 360–430 px wide, portrait | One column. Every tap target at least **44 × 44 px** (buttons 48 px tall). Primary action full-width. Barber screen buttons 72 px tall (wet or gloved hands). |
-| **Tablet** | 4 (and 7 as 2 columns) | 10-inch, 1280 × 800 landscape | Two panes. Touch targets 56 px tall. No hover-only actions. No horizontal scrolling. |
-| **TV** | 6 | 1920 × 1080, 16:9 | No scrolling, no clicks. Minimum text **36 px**; tokens ≥ **96 px**; barber names ≥ **48 px**. Content kept 48 px inside every edge (safe area). |
+| **Phone** | 1, 2, 3, 5, 7 | 360–639 px, portrait | One column. 16 px side padding. Every tap target at least 44 × 44 px; buttons 48 px tall. Primary actions use the bottom thumb zone. Barber actions 72 px tall. |
+| **Tablet** | 4 (and 7 as 2 columns) | 640–1279 px; 1024 × 768 or 1280 × 800 | Recompose in two panes. 24 px padding. Touch targets 56 px tall. No hover-only actions. |
+| **Desktop** | 1–5 and 7 | 1280 px and wider | Recompose in asymmetric or three-region layouts. 32 px padding. Customer screens use at most 1120 px; staff screens use at most 1600 px. |
+| **TV** | 6 | 1920 × 1080, 16:9 | Use a 16:9 grid scaled with viewport units. No scrolling or clicks. Portrait view asks for rotation. |
+
+- Test no horizontal scrolling at 320, 360, 768, 1280 and 1920 px widths.
+- Numerals scale to 72 px on phones, 96 px on tablets, 120 px on desktops and 160 px+ on TV.
+- Use `dvh` and safe-area inset padding for sticky bars.
 
 ### 1.3 Shared components
 
@@ -61,6 +73,11 @@ These names are fixed. The same word is used in every screen, message and the la
 | **Top bar** | Salon name + logo left. Language toggle **EN \| ગુ** right (all screens except the TV). Staff screens also show **[Lock]**. |
 | **Language toggle** | Switches instantly with no reload. Choice remembered on the device. |
 | **Token chip** | Gold text on a dark pill: `S-14`. |
+| **Token ticket** | Ticket-shaped token display with a main area and position stub. Used by My Status, compact Reception rows and TV when no stub is needed. |
+| **Split-flap numerals** | 220 ms character flips with 40 ms stagger for tokens and positions. Reduced motion uses instant change with a static gold underline. |
+| **Clock estimate ring** | Circular countdown with fine clock ticks, gold progress and the estimate in the centre. |
+| **Barber card** | Gold-ring avatar or initial, state chip and time-left rail. Busy looks lit, Free calm and On break dim. |
+| **Empty-chair state** | Custom 1.75 px line-art empty barber chair in gold on charcoal, paired with the documented friendly line. |
 | **Spot status chip** | Waiting = grey outline · Called = gold fill · In chair = green fill · Done = green outline · Cancelled = grey · No-show = red outline. Always icon + word. |
 | **Barber state chip** | Free = green dot · Busy = gold dot · On break = grey dot, plus the word. |
 | **Avatar** | Round photo, or the barber's initial on a gold ring if there is no photo. |
@@ -135,6 +152,32 @@ These names are fixed. The same word is used in every screen, message and the la
 ```
 
 Unknown URLs show a friendly "Page not found" with a button to Home. Direct opening of any URL (refresh, shared link, bookmark) must work on the deployed site.
+
+---
+
+## 2.1 Responsive layout and button placement
+
+### Global button rules
+
+1. Use one gold-filled primary action per view. Secondary actions use a gold outline; tertiary actions use text.
+2. Destructive actions use a red outline and stay at least 16 px from any primary button.
+3. On phones, primary actions live in a sticky bottom thumb-zone bar with safe-area and keyboard clearance.
+4. On tablet/desktop dialogs, the safe action is left and the risky action is right.
+5. On phones, dialogs become bottom sheets: safe action stacked on top, risky red-outline action below.
+6. Phone button height is 48 px, tablet 56 px and desktop 44 px. Barber Start/Done remain 72 px on phones.
+7. The language toggle remains in the top-right position on every public and staff screen except TV.
+
+### Per-screen layouts
+
+| Screen | Phone | Tablet | Desktop |
+|---|---|---|---|
+| Home | Live board, barber chips and active-spot card; Join Queue fixed in the bottom bar. | Two columns: live board left, Join panel right with Join Queue at the bottom. | Asymmetric 7/5 split: live numerals left, Join card plus QR right. |
+| Join | Single column with a sticky summary and Confirm bar. | Form left, sticky summary card right. | Same as tablet inside a 1120 px container. |
+| My Status | Ticket/ring first; details below; Cancel is last with at least 24 px separation. | Ticket/ring left, stepper/details/cancel right. | Same as tablet with 120 px ticket numerals. |
+| Reception | Barbers/Queue tabs; floating Add walk-in bottom-right; Call next at each card bottom. | 40/60 panes; Add walk-in top-right; row actions right-aligned. | Barbers, queue and finished-today/right rail regions. |
+| Barber | Current customer top; Start/Done in the lower third; Next, break toggle and count below. | Current customer/action left; Next, break toggle and count right. | Same as tablet in a centered 960 px container. |
+| TV | Portrait asks for rotation. | 16:9 scaled layout. | 16:9 scaled layout without controls or scrolling. |
+| Owner | Stacked cards with sticky Save/Discard only while changed. | Two-column cards. | Left sticky section menu and 960 px content column. |
 
 ---
 
@@ -702,3 +745,17 @@ Quick visual checks per screen. The full behavioural test checklist (rules, sync
 - [ ] U2: each service card shows planned vs actual minutes.
 - [ ] U3: the "I'm on my way" card appears only at 1st or 2nd and never changes position; Reception shows the chip.
 - [ ] U4: charts match recorded data and have a text summary.
+
+### 5.1 Visual system acceptance checks
+
+- [ ] No horizontal scrolling from 320 px to 1920 px.
+- [ ] Gujarati wraps and grows vertically without clipping or overlap.
+- [ ] Every public screen has loading, empty, error and connection-lost presentations.
+- [ ] Exactly one gold-filled primary action is visible in each view.
+- [ ] Destructive actions are visually separated from primary actions.
+- [ ] The language toggle stays in the same top-right location.
+- [ ] Status, Reception row tokens and TV numerals use the largest appropriate numeral scale.
+- [ ] Reduced-motion mode disables pulse, slide, split-flap and drift animations.
+- [ ] Every control has a visible 3 px gold focus ring and usable keyboard behavior on desktop.
+- [ ] The app is usable at 200% text zoom.
+- [ ] The production build does not include `/_styleguide`.
