@@ -99,3 +99,11 @@ export function resolveDummySpot(
   if (storedSpot && storedSpot.id === spotId) return storedSpot;
   return null;
 }
+
+export function getStaleStatusFallback(
+  requestedSpotId: string,
+  storedSpot: DummySpot | null,
+): string | null {
+  if (!storedSpot || storedSpot.id === requestedSpotId) return null;
+  return getStatusUrl(storedSpot);
+}

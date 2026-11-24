@@ -6,6 +6,8 @@ import {
   DUMMY_SPOT_STORAGE_KEY,
   readDummySpot,
   resolveDummySpot,
+  getStatusUrl,
+  getStaleStatusFallback,
   type DummySpot,
 } from '../dummySpot';
 
@@ -41,6 +43,14 @@ export function StatusScreen({ language }: StatusScreenProps) {
       const resolvedSpot = resolveDummySpot(spotId, navigationSpot, storedSpot);
 
       if (!resolvedSpot) {
+        const staleFallback = getStaleStatusFallback(spotId, storedSpot);
+        if (staleFallback) {
+          navigate(staleFallback, {
+            replace: true,
+            state: { spot: storedSpot },
+          });
+          return;
+        }
         setSpot(null);
         return;
       }
