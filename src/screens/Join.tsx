@@ -156,7 +156,7 @@ export function JoinScreen({ language }: JoinScreenProps) {
         existingSpot.phone === normalizedPhone
       ) {
         navigate(getStatusUrl(existingSpot), {
-          state: { existingSpotToken: existingSpot.token },
+          state: { spot: existingSpot, existingSpotToken: existingSpot.token },
         });
         return;
       }
@@ -179,7 +179,7 @@ export function JoinScreen({ language }: JoinScreenProps) {
       window.localStorage.setItem('latecuts-last-phone', normalizedPhone);
       saveDummySpot(window.localStorage, activeSpot);
       navigate(getStatusUrl(activeSpot), {
-        state: { newSpotToken: activeSpot.token },
+        state: { spot: activeSpot, newSpotToken: activeSpot.token },
       });
     }, 500);
   };

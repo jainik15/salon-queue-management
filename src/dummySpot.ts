@@ -72,3 +72,30 @@ export function readDummySpot(
 export function getStatusUrl(spot: DummySpot): string {
   return `/status/${encodeURIComponent(spot.id)}`;
 }
+
+export function resolveDummySpot(
+  spotId: string,
+  navigationSpot: Partial<DummySpot> | null,
+  storedSpot: DummySpot | null,
+): DummySpot | null {
+  if (
+    navigationSpot &&
+    navigationSpot.id === spotId &&
+    navigationSpot.token &&
+    navigationSpot.status &&
+    navigationSpot.position !== undefined &&
+    navigationSpot.estimate !== undefined &&
+    navigationSpot.initialEstimate !== undefined &&
+    navigationSpot.preference &&
+    navigationSpot.barber &&
+    navigationSpot.joinedAt &&
+    Array.isArray(navigationSpot.services) &&
+    navigationSpot.totalMinutes !== undefined &&
+    navigationSpot.totalPrice !== undefined
+  ) {
+    return navigationSpot as DummySpot;
+  }
+
+  if (storedSpot && storedSpot.id === spotId) return storedSpot;
+  return null;
+}

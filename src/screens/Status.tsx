@@ -5,6 +5,7 @@ import { formatWaitEstimate, isAllowedMove, resolveDemoStatus, RULE_CONSTANTS, t
 import {
   DUMMY_SPOT_STORAGE_KEY,
   readDummySpot,
+  resolveDummySpot,
   type DummySpot,
 } from '../dummySpot';
 
@@ -36,8 +37,10 @@ export function StatusScreen({ language }: StatusScreenProps) {
 
       const spotId = decodeURIComponent(location.pathname.split('/')[2] ?? '');
       const storedSpot = readDummySpot(window.localStorage, spotId);
+      const navigationSpot = (location.state as { spot?: Partial<DummySpot> } | null)?.spot ?? null;
+      const resolvedSpot = resolveDummySpot(spotId, navigationSpot, storedSpot);
 
-      if (!storedSpot || storedSpot.id !== spotId) {
+      if (!resolvedSpot) {
         setSpot(null);
         return;
       }
@@ -47,15 +50,15 @@ export function StatusScreen({ language }: StatusScreenProps) {
       const requestedStatus = statusParam && demoStatuses.includes(statusParam as SpotStatus)
         ? statusParam as SpotStatus
         : null;
-      const status = resolveDemoStatus(storedSpot.status, requestedStatus);
+      const status = resolveDemoStatus(resolvedSpot.status, requestedStatus);
       const position = Number.isInteger(positionParam) && positionParam >= 1
         ? positionParam
-        : storedSpot.position;
+        : resolvedSpot.position;
       const barberOnBreak = params.get('barberBreak') === 'true';
       const noWorkingBarber = params.get('noWorking') === 'true';
 
       setSpot({
-        ...storedSpot,
+        ...resolvedSpot,
         status,
         position,
         barberOnBreak,

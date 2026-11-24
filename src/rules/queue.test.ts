@@ -16,6 +16,7 @@ import {
   getStatusUrl,
   readDummySpot,
   saveDummySpot,
+  resolveDummySpot,
   type SpotStorage,
 } from '../dummySpot';
 
@@ -125,5 +126,7 @@ describe('dummy Join to Status handoff', () => {
     expect(statusUrl).toContain(spot.id);
     expect(values.has(DUMMY_SPOT_STORAGE_KEY)).toBe(true);
     expect(readDummySpot(storage, spot.id)).toEqual(spot);
+    expect(resolveDummySpot(spot.id, spot, null)).toEqual(spot);
+    expect(resolveDummySpot('wrong-id', spot, null)).toBeNull();
   });
 });
