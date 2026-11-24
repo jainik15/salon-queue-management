@@ -24,6 +24,7 @@ export default {
   'join.confirm': 'Confirm',
   'join.existing': 'You already have a spot: {token}',
   'status.waiting': 'Waiting',
+  'status.title': 'My Status',
   'status.called': 'Called',
   'status.inChair': 'In chair',
   'status.done': 'Done',
@@ -77,6 +78,7 @@ export default {
   'home.closesToday': 'Online joining has closed for today. Walk-ins are welcome until {time}.',
   'home.positionFourth': '4th in line',
   'join.back': 'Back',
+  'join.details': 'Your details',
   'join.chooseBarber': 'Choose your barber',
   'join.onBreakWarning': 'On break — your wait may be longer.',
   'join.joiningClosedNow': 'Online joining just closed. Please ask at reception.',
@@ -92,4 +94,5 @@ export default {
   'join.minutes': '{minutes} min',
   'join.price': '₹{price}',
   'join.phonePlaceholder': 'Phone (10 digits)',
+  'status.notFound': "We couldn't find this spot.",
 } as const;

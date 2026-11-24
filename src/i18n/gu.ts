@@ -24,6 +24,7 @@ export default {
   'join.confirm': 'પુષ્ટિ કરો',
   'join.existing': 'તમારી પાસે પહેલેથી જગ્યા છે: {token}',
   'status.waiting': 'રાહ જોઈ રહ્યા છીએ',
+  'status.title': 'મારું સ્ટેટસ',
   'status.called': 'બોલાવ્યા',
   'status.inChair': 'ખુરશી પર',
   'status.done': 'પૂર્ણ',
@@ -77,6 +78,7 @@ export default {
   'home.closesToday': 'આજ માટે ઑનલાઇન જોડાવું બંધ થયું છે. {time} સુધી વોક-ઇન સ્વાગત છે.',
   'home.positionFourth': '4મો ક્રમ',
   'join.back': 'પાછા',
+  'join.details': 'તમારી વિગતો',
   'join.chooseBarber': 'તમારો બાર્બર પસંદ કરો',
   'join.onBreakWarning': 'વિરામ પર છે — તમારી રાહ વધુ લાંબી હોઈ શકે છે.',
   'join.joiningClosedNow': 'ઑનલાઇન જોડાવું હમણાં બંધ થયું છે. કૃપા કરીને રિસેપ્શનને પૂછો.',
@@ -92,4 +94,5 @@ export default {
   'join.minutes': '{minutes} મિનિટ',
   'join.price': '₹{price}',
   'join.phonePlaceholder': 'ફોન (10 અંક)',
+  'status.notFound': 'આમને આ જગ્યા મળી શકી નથી.',
 } as const;

@@ -66,6 +66,55 @@ function BarberPage({ language }: { language: Language }) {
   return <EmptyPage language={language} title={name || 'Barber'} />;
 }
 
+function StatusPage({ language }: { language: Language }) {
+  const location = useLocation();
+  const state = location.state as { existingSpotToken?: string; newSpotToken?: string } | null;
+  const token = state?.existingSpotToken ?? state?.newSpotToken;
+  const spotId = decodeURIComponent(location.pathname.split('/')[2] ?? '');
+  const storedSpotJson = window.localStorage.getItem('latecuts-active-spot');
+  let storedSpotId = '';
+
+  if (storedSpotJson) {
+    try {
+      storedSpotId = (JSON.parse(storedSpotJson) as { id?: string }).id ?? '';
+    } catch {
+      storedSpotId = '';
+    }
+  }
+
+  if ((!storedSpotId || spotId !== storedSpotId) && !state) {
+    return (
+      <main className="app-shell">
+        <TopBar language={language} title={translate(language, 'status.title')} />
+        <section className="empty-page">
+          <h2>{translate(language, 'status.notFound')}</h2>
+          <Link className="primary-button" to="/">
+            {translate(language, 'common.home')}
+          </Link>
+        </section>
+      </main>
+    );
+  }
+
+  return (
+    <main className="app-shell">
+      <TopBar language={language} title={translate(language, 'status.title')} />
+      <section className="empty-page">
+        {token && state?.existingSpotToken ? (
+          <h2>{translate(language, 'join.existing', { token })}</h2>
+        ) : token ? (
+          <h2>{token}</h2>
+        ) : (
+          <h2>{translate(language, 'status.waiting')}</h2>
+        )}
+        <Link className="primary-button" to="/">
+          {translate(language, 'common.home')}
+        </Link>
+      </section>
+    </main>
+  );
+}
+
 export default function App() {
   const [language, setLanguage] = useState<Language>(getSavedLanguage);
 
@@ -88,7 +137,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomeScreen language={language} />} />
         <Route path="/join" element={<JoinScreen language={language} />} />
-        <Route path="/status/:id" element={<EmptyPage language={language} title="My Status" />} />
+        <Route path="/status/:id" element={<StatusPage language={language} />} />
         <Route path="/reception" element={<EmptyPage language={language} title="Reception" />} />
         <Route path="/barber/:name" element={<BarberPage language={language} />} />
         <Route path="/display" element={<EmptyPage language={language} title="LateCuts" />} />

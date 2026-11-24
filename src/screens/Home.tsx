@@ -6,6 +6,11 @@ type HomeScreenProps = {
   language: Language;
 };
 
+type ActiveSpot = {
+  id: string;
+  token: string;
+};
+
 const dummyBarbers = [
   { name: 'Ravi', state: 'busy' as const },
   { name: 'Amit', state: 'free' as const },
@@ -16,12 +21,22 @@ export function HomeScreen({ language }: HomeScreenProps) {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [connectionLost, setConnectionLost] = useState(false);
+  const [activeSpot, setActiveSpot] = useState<ActiveSpot | null>(null);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setLoading(false), 350);
     const updateConnection = () => setConnectionLost(!navigator.onLine);
-
     updateConnection();
+
+    const storedSpot = window.localStorage.getItem('latecuts-active-spot');
+    if (storedSpot) {
+      try {
+        setActiveSpot(JSON.parse(storedSpot) as ActiveSpot);
+      } catch {
+        window.localStorage.removeItem('latecuts-active-spot');
+        setActiveSpot(null);
+      }
+    }
     window.addEventListener('online', updateConnection);
     window.addEventListener('offline', updateConnection);
 
@@ -90,17 +105,19 @@ export function HomeScreen({ language }: HomeScreenProps) {
             {translate(language, 'home.open', { time: '9 PM' })}
           </div>
 
-          <article className="active-spot-card">
-            <p>
-              {translate(language, 'home.activeSpot', {
-                token: 'S-14',
-                position: translate(language, 'home.positionFourth'),
-              })}
-            </p>
-            <Link className="text-button" to="/status/demo">
-              {translate(language, 'home.viewStatus')}
-            </Link>
-          </article>
+          {activeSpot && (
+            <article className="active-spot-card">
+              <p>
+                {translate(language, 'home.activeSpot', {
+                  token: activeSpot.token,
+                  position: translate(language, 'home.positionFourth'),
+                })}
+              </p>
+              <Link className="text-button" to={`/status/${activeSpot.id}`}>
+                {translate(language, 'home.viewStatus')}
+              </Link>
+            </article>
+          )}
 
           <article className="live-card">
             <h2>{translate(language, 'home.waiting', { count: 6 })}</h2>

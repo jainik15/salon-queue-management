@@ -120,10 +120,12 @@ export function JoinScreen({ language }: JoinScreenProps) {
 
     if (nextNameError) {
       nameRef.current?.focus();
+      nameRef.current?.scrollIntoView({ behavior: 'auto', block: 'center' });
       return;
     }
     if (nextPhoneError) {
       phoneRef.current?.focus();
+      phoneRef.current?.scrollIntoView({ behavior: 'auto', block: 'center' });
       return;
     }
     if (nextServiceError) return;
@@ -150,7 +152,7 @@ export function JoinScreen({ language }: JoinScreenProps) {
       }
 
       const activeSpot: ActiveSpot = {
-        id: `spot-${Date.now()}`,
+        id: crypto.randomUUID(),
         token: 'S-14',
         phone: normalizedPhone,
       };
@@ -158,7 +160,9 @@ export function JoinScreen({ language }: JoinScreenProps) {
       window.localStorage.setItem('latecuts-last-name', name.trim());
       window.localStorage.setItem('latecuts-last-phone', normalizedPhone);
       window.localStorage.setItem('latecuts-active-spot', JSON.stringify(activeSpot));
-      navigate(`/status/${activeSpot.id}`);
+      navigate(`/status/${activeSpot.id}`, {
+        state: { newSpotToken: activeSpot.token },
+      });
     }, 500);
   };
 
@@ -197,7 +201,7 @@ export function JoinScreen({ language }: JoinScreenProps) {
     <JoinPageShell language={language} connectionLost={connectionLost}>
       <form className="join-form" onSubmit={handleSubmit} noValidate>
         <section className="join-content">
-          <h2>{translate(language, 'join.name')}</h2>
+          <h2>{translate(language, 'join.details')}</h2>
           <label className="join-field">
             <span>{translate(language, 'join.name')}</span>
             <input
