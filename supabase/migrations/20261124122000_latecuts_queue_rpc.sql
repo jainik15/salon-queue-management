@@ -359,8 +359,8 @@ exception
 end;
 $$;
 
-revoke all on function public.join_queue(text, text, uuid[], uuid, uuid) from public, anon, authenticated;
-grant execute on function public.join_queue(text, text, uuid[], uuid, uuid) to anon, authenticated;
+revoke all on function public.join_queue(text, text, uuid[], uuid, uuid, text) from public, anon, authenticated;
+grant execute on function public.join_queue(text, text, uuid[], uuid, uuid, text) to anon, authenticated;
 
 create or replace function public.call_next(p_barber_id uuid)
 returns jsonb
